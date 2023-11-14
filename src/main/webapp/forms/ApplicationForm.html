@@ -1,0 +1,46 @@
+<form name="ApplicationForm">
+    <div class="form-group">
+        <label for="productName">Product name</label>
+        <input class="form-control"
+               cam-variable-type="String"
+               cam-variable-name="application_productName"
+               name="productName"
+               id="productName" />
+    </div>
+
+    <div class="form-group">
+        <label for="productAmount">Product amount</label>
+        <input class="form-control"
+               cam-variable-type="Integer"
+               cam-variable-name="application_productAmount"
+               name="productAmount"
+               id="productAmount" />
+    </div>
+
+    <div class="form-group">
+        <label for="productType">Product type</label>
+        <select class="form-select"
+                cam-variable-type="String"
+                cam-variable-name="application_productType"
+                name="productType"
+                id="productType"
+        >
+            <option value="other" selected> Other </option>
+            <option value="grocery"> Grocery </option>
+            <option value="transport"> Transport </option>
+            <option value="entertainment"> Entertainment </option>
+            <option value="electronics"> Electronics </option>
+            <option value="military"> Military </option>
+            <option value="secret"> Secret </option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="productDescription">Product description</label>
+        <input class="form-control"
+               cam-variable-type="String"
+               cam-variable-name="application_productDescription"
+               name="productDescription"
+               id="productDescription" />
+    </div>
+</form>
