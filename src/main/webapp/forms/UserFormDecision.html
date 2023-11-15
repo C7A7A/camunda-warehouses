@@ -1,4 +1,5 @@
 <form name="ApplicationFormReceipt">
+    <h3> Input data </h3>
     <div class="form-group">
         <label for="productName">Product name</label>
         <input class="form-control"
@@ -39,32 +40,37 @@
                readonly />
     </div>
 
-
+    <h3> Manager Decision </h3>
     <div class="form-group">
-        <label for="productDecision">Decision</label>
-        <select class="form-select"
-                cam-variable-type="String"
-                cam-variable-name="application_productSpecialDecision"
-                name="productDecision"
-                id="productDecision"
-        >
-            <option value="reject" selected> Reject </option>
-            <option value="special1"> Special warehouse 1 </option>
-            <option value="special2"> Special warehouse 2 </option>
-            <option value="special3"> Special warehouse 3 </option>
-            <option value="special4"> Special warehouse 4 </option>
-            <option value="special5"> Special warehouse 5 </option>
-            <option value="special6"> Special warehouse 6 </option>
-        </select>
+        <label for="productDecision">Manager Decision</label>
+        <input class="form-control"
+               cam-variable-type="String"
+               cam-variable-name="application_productDecision"
+               name="productDecision"
+               id="productDecision"
+               readonly />
     </div>
 
     <div class="form-group">
-        <label for="productDecisionDescription">Decision description</label>
+        <label for="productDecisionDescription">Manager Decision description</label>
         <input class="form-control"
                cam-variable-type="String"
                cam-variable-name="application_productDecisionDescription"
                name="productDecisionDescription"
-               id="productDecisionDescription" />
+               id="productDecisionDescription"
+               readonly />
     </div>
+
+    <h3> Do you want to fill application form again? </h3>
+        <label for="userDecision"> Your Decision </label>
+        <select class="form-select"
+                cam-variable-type="String"
+                cam-variable-name="application_userDecision"
+                name="userDecision"
+                id="userDecision"
+        >
+            <option value="yes" selected> Yes </option>
+            <option value="no"> No </option>
+        </select>
 </form>
 

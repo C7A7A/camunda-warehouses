@@ -32,15 +32,14 @@
     </div>
 
     <h3> Payment </h3>
-    <!-- TODO: dmn do obliczenia kosztu    -->
     <div class="form-group">
-        <label for="paymentToPay">Cost</label>
+        <label for="paymentToPay">To pay:</label>
         <input class="form-control"
-               cam-variable-type="String"
+               cam-variable-type="Integer"
                cam-variable-name="application_paymentCost"
                name="paymentToPay"
                id="paymentToPay"
-               value="100" />
+               readonly />
     </div>
 
     <div class="form-group">
@@ -52,11 +51,10 @@
                id="paymentCard" />
     </div>
 
-    <!-- TODO: sprawdzać jakoś mądrzej atrybuty -->
     <div class="form-group">
         <label for="paymentAmount">Payment amount</label>
         <input class="form-control"
-               cam-variable-type="Number"
+               cam-variable-type="Integer"
                cam-variable-name="application_paymentAmount"
                name="paymentAmount"
                id="paymentAmount" />

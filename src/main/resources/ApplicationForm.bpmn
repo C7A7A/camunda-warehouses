@@ -1,367 +1,517 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1dwxuqy" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.9.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.18.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1dwxuqy" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.17.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.18.0">
   <bpmn:collaboration id="Collaboration_13b86ov">
     <bpmn:extensionElements />
     <bpmn:participant id="Participant_19xu92h" name="Warehouses Application" processRef="warehouses" />
   </bpmn:collaboration>
   <bpmn:process id="warehouses" name="Warehouses" isExecutable="true">
-    <bpmn:sequenceFlow id="Flow_0hcyp8j" sourceRef="StartWarehousesEvent" targetRef="WhatProductType" />
-    <bpmn:sequenceFlow id="NoProductType" name="No Product Type" sourceRef="WhatProductType" targetRef="ManagerDecision">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productType == "other"}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:startEvent id="StartWarehousesEvent" name="Start Warehouses Event" camunda:formKey="embedded:app:forms/ApplicationForm.html" camunda:initiator="initiator">
-      <bpmn:extensionElements />
-      <bpmn:outgoing>Flow_0hcyp8j</bpmn:outgoing>
-    </bpmn:startEvent>
     <bpmn:exclusiveGateway id="WhatProductType" name="What Product Type?" default="StandardProductType">
-      <bpmn:incoming>Flow_0hcyp8j</bpmn:incoming>
-      <bpmn:incoming>Flow_0ywgpft</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1tfsgzd</bpmn:incoming>
       <bpmn:outgoing>NoProductType</bpmn:outgoing>
       <bpmn:outgoing>SpecialProductType</bpmn:outgoing>
       <bpmn:outgoing>StandardProductType</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="SpecialProductType" name="Special Product Type" sourceRef="WhatProductType" targetRef="ApplicationFormManagerSpecialDecision">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productType == "secret" || application_productType == "military"}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="StandardProductType" name="Standard Product Type" sourceRef="WhatProductType" targetRef="Gateway_0n9qr92" />
-    <bpmn:sequenceFlow id="Flow_0z2rbhz" name="Standard" sourceRef="Gateway_1jna7as" targetRef="Gateway_0n9qr92" />
-    <bpmn:sequenceFlow id="Flow_1kj6zxh" name="Special" sourceRef="Gateway_1jna7as" targetRef="ApplicationFormManagerSpecialDecision">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productDecision == "special"}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_01f9pc0" name="Reject" sourceRef="Gateway_1jna7as" targetRef="SendMessageToClientProductType">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productDecision == "reject"}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_0ake4fe" name="Reject Product after 3 minutes" sourceRef="Wait3Minutes" targetRef="SendMessageToClientProductType" />
-    <bpmn:sequenceFlow id="Flow_1wyat84" name="Everything ok" sourceRef="WhatSpecialManagerDecision" targetRef="FormPayStorage" />
-    <bpmn:sequenceFlow id="Flow_0vrftgd" sourceRef="Gateway_0n9qr92" targetRef="FormPayStorage" />
-    <bpmn:sequenceFlow id="Flow_0hi2a4q" sourceRef="ManagerDecision" targetRef="Gateway_1jna7as" />
     <bpmn:exclusiveGateway id="Gateway_0n9qr92" default="Flow_0vrftgd">
       <bpmn:incoming>Flow_0z2rbhz</bpmn:incoming>
       <bpmn:incoming>StandardProductType</bpmn:incoming>
       <bpmn:outgoing>Flow_0vrftgd</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="ApplicationFormManagerSpecialDecision" name="Manager Decision (Special product)" camunda:formKey="embedded:app:forms/ApplicationFormManagerSpecialDecision.html">
+    <bpmn:userTask id="ApplicationFormWarehousemanDecision" name="Warehouseman Decision" camunda:formKey="embedded:app:forms/ApplicationFormManagerSpecialDecision.html">
       <bpmn:incoming>SpecialProductType</bpmn:incoming>
       <bpmn:incoming>Flow_1kj6zxh</bpmn:incoming>
       <bpmn:outgoing>Flow_1rw7bnt</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_1ym6oh6" name="Reject" sourceRef="WhatSpecialManagerDecision" targetRef="RejectSpecialProduct">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productSpecialDecision == "reject"}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:endEvent id="RejectSpecialProduct" name="Reject special product">
-      <bpmn:incoming>Flow_1ym6oh6</bpmn:incoming>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1njwwr7" messageRef="Message_1pqg6mb" />
-    </bpmn:endEvent>
-    <bpmn:userTask id="FormPayStorage" name="Enter payment data" camunda:formKey="embedded:app:forms/PaymentForm.html">
-      <bpmn:incoming>Flow_0vrftgd</bpmn:incoming>
-      <bpmn:incoming>Flow_1wyat84</bpmn:incoming>
-      <bpmn:outgoing>Flow_1t3p7x2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="ManagerDecision" name="Manager Decision" camunda:formKey="embedded:app:forms/ApplicationFormManagerDecision.html">
       <bpmn:extensionElements />
       <bpmn:incoming>NoProductType</bpmn:incoming>
       <bpmn:outgoing>Flow_0hi2a4q</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1jna7as" name="What warehouse?" default="Flow_0z2rbhz">
+      <bpmn:incoming>Flow_0hi2a4q</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kj6zxh</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0z2rbhz</bpmn:outgoing>
+      <bpmn:outgoing>Flow_01f9pc0</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="WhatWarehousemanDecision" name="What Warehouseman Decision?" default="Flow_1wyat84">
+      <bpmn:incoming>Flow_1rw7bnt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ym6oh6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1wyat84</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="FillApplicationForm" name="Fill Application Form" camunda:formKey="embedded:app:forms/ApplicationForm.html" camunda:assignee="${initiator}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="status">unknown</camunda:outputParameter>
+          <camunda:outputParameter name="reject_reason">unknown</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ywgpft</bpmn:incoming>
+      <bpmn:incoming>Flow_07jg4ui</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1tfsgzd</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="RejectSpecialProductMessage" name="Reject special product">
+      <bpmn:incoming>Flow_1artwcx</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1njwwr7" />
+    </bpmn:endEvent>
+    <bpmn:scriptTask id="RejectSpecialScript" name="Reject Special Script" scriptFormat="groovy">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_1ym6oh6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1artwcx</bpmn:outgoing>
+      <bpmn:script>execution.setVariable("status", "reject")
+execution.setVariable("reject_reason", "special product reject")</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:userTask id="FormPayStorage" name="Enter payment data" camunda:formKey="embedded:app:forms/PaymentForm.html" camunda:assignee="${initiator}">
+      <bpmn:incoming>Flow_0vjr59j</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t3p7x2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="RejectProductMessage" name="Reject product">
+      <bpmn:incoming>Flow_1m4iktg</bpmn:incoming>
+      <bpmn:incoming>Flow_0fknxxm</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0if3r3o" />
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="WasPaymentCorrect" name="Was payment correct?" default="Flow_0xnxon9">
+      <bpmn:incoming>Flow_1t3p7x2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xnxon9</bpmn:outgoing>
+      <bpmn:outgoing>Flow_06n9wob</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="AcceptProductMessage" name="Accept product">
+      <bpmn:incoming>Flow_09ej3c9</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1i8ycr2" />
+    </bpmn:endEvent>
+    <bpmn:scriptTask id="RejectPaymentScript" name="Reject Payment Script" scriptFormat="groovy">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_0xnxon9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m4iktg</bpmn:outgoing>
+      <bpmn:script>execution.setVariable("status", "reject")
+execution.setVariable("reject_reason", "payment error reject")</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="AcceptScript" name="Accept Script" scriptFormat="groovy">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_06n9wob</bpmn:incoming>
+      <bpmn:outgoing>Flow_09ej3c9</bpmn:outgoing>
+      <bpmn:script>execution.setVariable("status", "accept")
+execution.setVariable("reject_reason", "")</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:endEvent id="PaymentSomethingWentWrong" name="Something went wrong">
+      <bpmn:incoming>Flow_16q6fel</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1wiumwz" />
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="WasMessagePositive" name="Was message positive?" default="Flow_0wp7ziu">
+      <bpmn:incoming>SequenceFlow_09y3i3e</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wp7ziu</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ywgpft</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="UserDecision" name="User Decision" camunda:formKey="embedded:app:forms/UserFormDecision.html" camunda:assignee="${initiator}">
+      <bpmn:incoming>Flow_0ake4fe</bpmn:incoming>
+      <bpmn:incoming>Flow_01f9pc0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_09y3i3e</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:scriptTask id="RejectUserDecisionScript" name="Reject User DecisionScript" scriptFormat="groovy">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_0wp7ziu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fknxxm</bpmn:outgoing>
+      <bpmn:script>execution.setVariable("status", "reject")
+execution.setVariable("reject_reason", "user decision reject")</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:startEvent id="StartWarehousesEvent" name="Start Warehouses Event" camunda:initiator="initiator">
+      <bpmn:outgoing>Flow_07jg4ui</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="CalculatePaymentSubProcess" name="Calculate Payment SubProcess">
+      <bpmn:incoming>Flow_1wyat84</bpmn:incoming>
+      <bpmn:incoming>Flow_0vrftgd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vjr59j</bpmn:outgoing>
+      <bpmn:startEvent id="Event_0q3rqw3">
+        <bpmn:outgoing>Flow_1ic6dc0</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:endEvent id="Event_073vyfu">
+        <bpmn:incoming>Flow_1h354ax</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:endEvent id="PaymentError" name="Payment Error">
+        <bpmn:incoming>Flow_1jcr2ld</bpmn:incoming>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0bpty6p" errorRef="Error_0iyy49w" />
+      </bpmn:endEvent>
+      <bpmn:serviceTask id="Activity_0wizrck" name="Calculate Payment" camunda:class="org.bp.CalculatePayment">
+        <bpmn:incoming>Flow_1ic6dc0</bpmn:incoming>
+        <bpmn:outgoing>Flow_014n0si</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_1ic6dc0" sourceRef="Event_0q3rqw3" targetRef="Activity_0wizrck" />
+      <bpmn:exclusiveGateway id="IsFinalAmountCorrect" name="Is Final Amount Correct?" default="Flow_1h354ax">
+        <bpmn:incoming>Flow_014n0si</bpmn:incoming>
+        <bpmn:outgoing>Flow_1h354ax</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1jcr2ld</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_014n0si" sourceRef="Activity_0wizrck" targetRef="IsFinalAmountCorrect" />
+      <bpmn:sequenceFlow id="Flow_1h354ax" name="Yes" sourceRef="IsFinalAmountCorrect" targetRef="Event_073vyfu" />
+      <bpmn:sequenceFlow id="Flow_1jcr2ld" name="No" sourceRef="IsFinalAmountCorrect" targetRef="PaymentError">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_paymentCost &lt;= 0}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+    </bpmn:subProcess>
     <bpmn:boundaryEvent id="Wait3Minutes" name="Wait 3 Minutes" attachedToRef="ManagerDecision">
       <bpmn:outgoing>Flow_0ake4fe</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_0cr5t68">
         <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT3M</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
-    <bpmn:exclusiveGateway id="Gateway_1jna7as" name="What warehouse?" default="Flow_0z2rbhz">
-      <bpmn:incoming>Flow_0hi2a4q</bpmn:incoming>
-      <bpmn:outgoing>Flow_1kj6zxh</bpmn:outgoing>
-      <bpmn:outgoing>Flow_01f9pc0</bpmn:outgoing>
-      <bpmn:outgoing>Flow_0z2rbhz</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:intermediateThrowEvent id="SendMessageToClientProductType" name="Send Message To Client - Product Type">
-      <bpmn:incoming>Flow_01f9pc0</bpmn:incoming>
-      <bpmn:incoming>Flow_0ake4fe</bpmn:incoming>
-      <bpmn:outgoing>Flow_0gnco5v</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1xsrqvd" />
-    </bpmn:intermediateThrowEvent>
-    <bpmn:sequenceFlow id="Flow_0gnco5v" sourceRef="SendMessageToClientProductType" targetRef="EvaluateMessage" />
-    <bpmn:receiveTask id="EvaluateMessage" name="Get Message From Client">
-      <bpmn:incoming>Flow_0gnco5v</bpmn:incoming>
-      <bpmn:outgoing>Flow_03184tp</bpmn:outgoing>
-    </bpmn:receiveTask>
-    <bpmn:sequenceFlow id="Flow_03184tp" sourceRef="EvaluateMessage" targetRef="WasMessagePositive" />
-    <bpmn:exclusiveGateway id="WasMessagePositive" name="Was message positive?" default="Flow_0wp7ziu">
-      <bpmn:incoming>Flow_03184tp</bpmn:incoming>
-      <bpmn:outgoing>Flow_0wp7ziu</bpmn:outgoing>
-      <bpmn:outgoing>Flow_0ywgpft</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0sv55bq" sourceRef="Wait5Minutes" targetRef="Event_03a0w6y" />
-    <bpmn:sequenceFlow id="Flow_0wp7ziu" name="No" sourceRef="WasMessagePositive" targetRef="Event_03a0w6y" />
-    <bpmn:boundaryEvent id="Wait5Minutes" name="Wait 5 Minutes" attachedToRef="EvaluateMessage">
-      <bpmn:outgoing>Flow_0sv55bq</bpmn:outgoing>
-      <bpmn:timerEventDefinition id="TimerEventDefinition_06ojmjy">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5M</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
-    <bpmn:endEvent id="Event_03a0w6y" name="Reject product">
-      <bpmn:incoming>Flow_0sv55bq</bpmn:incoming>
-      <bpmn:incoming>Flow_0wp7ziu</bpmn:incoming>
-      <bpmn:incoming>Flow_0xnxon9</bpmn:incoming>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_0if3r3o" />
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0ywgpft" name="Yes" sourceRef="WasMessagePositive" targetRef="WhatProductType">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_messageDecision == true}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="SequenceFlow_1tfsgzd" sourceRef="FillApplicationForm" targetRef="WhatProductType" />
+    <bpmn:sequenceFlow id="NoProductType" name="No Product Type" sourceRef="WhatProductType" targetRef="ManagerDecision">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productType == "other"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SpecialProductType" name="Special Product Type" sourceRef="WhatProductType" targetRef="ApplicationFormWarehousemanDecision">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productType == "secret" || application_productType == "military"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="StandardProductType" name="Standard Product Type" sourceRef="WhatProductType" targetRef="Gateway_0n9qr92" />
+    <bpmn:sequenceFlow id="Flow_0z2rbhz" name="Standard" sourceRef="Gateway_1jna7as" targetRef="Gateway_0n9qr92" />
+    <bpmn:sequenceFlow id="Flow_0vrftgd" sourceRef="Gateway_0n9qr92" targetRef="CalculatePaymentSubProcess" />
+    <bpmn:sequenceFlow id="Flow_1kj6zxh" name="Special" sourceRef="Gateway_1jna7as" targetRef="ApplicationFormWarehousemanDecision">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productDecision == "special"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1rw7bnt" sourceRef="ApplicationFormWarehousemanDecision" targetRef="WhatWarehousemanDecision" />
+    <bpmn:sequenceFlow id="Flow_0hi2a4q" sourceRef="ManagerDecision" targetRef="Gateway_1jna7as" />
+    <bpmn:sequenceFlow id="Flow_01f9pc0" name="Reject" sourceRef="Gateway_1jna7as" targetRef="UserDecision">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productDecision == "reject"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1wyat84" name="Everything ok" sourceRef="WhatWarehousemanDecision" targetRef="CalculatePaymentSubProcess" />
+    <bpmn:sequenceFlow id="Flow_1ym6oh6" name="Reject" sourceRef="WhatWarehousemanDecision" targetRef="RejectSpecialScript">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_productSpecialDecision == "reject"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ywgpft" name="Yes" sourceRef="WasMessagePositive" targetRef="FillApplicationForm">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_userDecision == "yes"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_07jg4ui" sourceRef="StartWarehousesEvent" targetRef="FillApplicationForm" />
+    <bpmn:sequenceFlow id="Flow_1artwcx" sourceRef="RejectSpecialScript" targetRef="RejectSpecialProductMessage" />
+    <bpmn:sequenceFlow id="Flow_0vjr59j" sourceRef="CalculatePaymentSubProcess" targetRef="FormPayStorage" />
     <bpmn:sequenceFlow id="Flow_1t3p7x2" sourceRef="FormPayStorage" targetRef="WasPaymentCorrect" />
-    <bpmn:exclusiveGateway id="WasPaymentCorrect" name="Was payment correct?" default="Flow_0xnxon9">
-      <bpmn:incoming>Flow_1t3p7x2</bpmn:incoming>
-      <bpmn:outgoing>Flow_0xnxon9</bpmn:outgoing>
-      <bpmn:outgoing>Flow_06n9wob</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0xnxon9" name="No" sourceRef="WasPaymentCorrect" targetRef="Event_03a0w6y" />
-    <bpmn:sequenceFlow id="Flow_06n9wob" name="yes" sourceRef="WasPaymentCorrect" targetRef="Event_08f5sv1">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_paymentAmount &gt; 0}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_1m4iktg" sourceRef="RejectPaymentScript" targetRef="RejectProductMessage" />
+    <bpmn:sequenceFlow id="Flow_0fknxxm" sourceRef="RejectUserDecisionScript" targetRef="RejectProductMessage" />
+    <bpmn:sequenceFlow id="Flow_0xnxon9" name="No" sourceRef="WasPaymentCorrect" targetRef="RejectPaymentScript" />
+    <bpmn:sequenceFlow id="Flow_06n9wob" name="yes" sourceRef="WasPaymentCorrect" targetRef="AcceptScript">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${application_paymentAmount == application_paymentCost}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:endEvent id="Event_08f5sv1" name="Accept product">
-      <bpmn:incoming>Flow_06n9wob</bpmn:incoming>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1i8ycr2" />
-    </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="WhatSpecialManagerDecision" name="What Special Manager Decision?" default="Flow_1wyat84">
-      <bpmn:incoming>Flow_1rw7bnt</bpmn:incoming>
-      <bpmn:outgoing>Flow_1ym6oh6</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1wyat84</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_1rw7bnt" sourceRef="ApplicationFormManagerSpecialDecision" targetRef="WhatSpecialManagerDecision" />
+    <bpmn:sequenceFlow id="Flow_09ej3c9" sourceRef="AcceptScript" targetRef="AcceptProductMessage" />
+    <bpmn:sequenceFlow id="Flow_16q6fel" sourceRef="Event_13kbwhs" targetRef="PaymentSomethingWentWrong" />
+    <bpmn:sequenceFlow id="SequenceFlow_09y3i3e" sourceRef="UserDecision" targetRef="WasMessagePositive" />
+    <bpmn:sequenceFlow id="Flow_0wp7ziu" name="No" sourceRef="WasMessagePositive" targetRef="RejectUserDecisionScript" />
+    <bpmn:sequenceFlow id="Flow_0ake4fe" name="Reject Product after 3 minutes" sourceRef="Wait3Minutes" targetRef="UserDecision" />
+    <bpmn:boundaryEvent id="Event_13kbwhs" attachedToRef="CalculatePaymentSubProcess">
+      <bpmn:outgoing>Flow_16q6fel</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_03ewvta" />
+    </bpmn:boundaryEvent>
   </bpmn:process>
-  <bpmn:message id="Message_1pqg6mb" name="Message_1pqg6mb" />
+  <bpmn:message id="Message_0d2ksm5" name="ClientMessageRejectedProduct" />
+  <bpmn:message id="Message_0494n9m" name="AskClientAboutRejection" />
+  <bpmn:error id="Error_0iyy49w" name="Payment Error" errorCode="500" camunda:errorMessage="Something went wrong" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_13b86ov">
       <bpmndi:BPMNShape id="Participant_19xu92h_di" bpmnElement="Participant_19xu92h" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="1450" height="730" />
+        <dc:Bounds x="160" y="42" width="1760" height="735" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartWarehousesEvent" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="249" y="392" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="225" y="435" width="89" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0ryepgd_di" bpmnElement="WhatProductType" isMarkerVisible="true" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="325" y="385" width="50" height="50" />
+        <dc:Bounds x="481" y="352" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="316" y="438" width="67" height="27" />
+          <dc:Bounds x="472" y="405" width="67" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0n9qr92_di" bpmnElement="Gateway_0n9qr92" isMarkerVisible="true" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="545" y="385" width="50" height="50" />
+        <dc:Bounds x="701" y="352" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_04pkzsg_di" bpmnElement="ApplicationFormManagerSpecialDecision" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="420" y="209" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0oqqawv_di" bpmnElement="RejectSpecialProduct">
-        <dc:Bounds x="1112" y="122" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1095" y="165" width="70" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_081yj74_di" bpmnElement="FormPayStorage" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="710" y="370" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_04pkzsg_di" bpmnElement="ApplicationFormWarehousemanDecision" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="576" y="176" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1axq2am_di" bpmnElement="ManagerDecision" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="400" y="590" width="100" height="80" />
+        <dc:Bounds x="556" y="557" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1jna7as_di" bpmnElement="Gateway_1jna7as" isMarkerVisible="true" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="545" y="545" width="50" height="50" />
+        <dc:Bounds x="701" y="512" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="536" y="593" width="88" height="14" />
+          <dc:Bounds x="692" y="560" width="88" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0ztsze7_di" bpmnElement="SendMessageToClientProductType">
-        <dc:Bounds x="742" y="552" width="36" height="36" />
+      <bpmndi:BPMNShape id="Gateway_01klmbn_di" bpmnElement="WhatWarehousemanDecision" isMarkerVisible="true" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="731" y="191" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="716" y="510" width="88" height="40" />
+          <dc:Bounds x="719" y="248" width="77" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1g3el7c_di" bpmnElement="EvaluateMessage">
-        <dc:Bounds x="910" y="530" width="100" height="80" />
+      <bpmndi:BPMNShape id="UserTask_1qm2h85_di" bpmnElement="FillApplicationForm" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="338" y="337" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0zjza5v_di" bpmnElement="WasMessagePositive" isMarkerVisible="true">
-        <dc:Bounds x="1055" y="545" width="50" height="50" />
+      <bpmndi:BPMNShape id="Event_0oqqawv_di" bpmnElement="RejectSpecialProductMessage">
+        <dc:Bounds x="972" y="89" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1045" y="508" width="69" height="27" />
+          <dc:Bounds x="955" y="132" width="70" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0qncl22_di" bpmnElement="Event_03a0w6y">
-        <dc:Bounds x="1252" y="422" width="36" height="36" />
+      <bpmndi:BPMNShape id="Activity_0djsfz9_di" bpmnElement="RejectSpecialScript" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="790" y="67" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_081yj74_di" bpmnElement="FormPayStorage" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1250" y="320" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0qncl22_di" bpmnElement="RejectProductMessage">
+        <dc:Bounds x="1792" y="342" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1298" y="433" width="72" height="14" />
+          <dc:Bounds x="1838" y="353" width="72" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0xwm7de_di" bpmnElement="WasPaymentCorrect" isMarkerVisible="true">
-        <dc:Bounds x="885" y="385" width="50" height="50" />
+      <bpmndi:BPMNShape id="Gateway_0xwm7de_di" bpmnElement="WasPaymentCorrect" isMarkerVisible="true" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1425" y="335" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="877" y="442" width="67" height="27" />
+          <dc:Bounds x="1417" y="392" width="67" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1eqx3hv_di" bpmnElement="Event_08f5sv1">
-        <dc:Bounds x="892" y="272" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_1eqx3hv_di" bpmnElement="AcceptProductMessage">
+        <dc:Bounds x="1566" y="195" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="873" y="242" width="74" height="14" />
+          <dc:Bounds x="1547" y="165" width="74" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_01klmbn_di" bpmnElement="WhatSpecialManagerDecision" isMarkerVisible="true" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="575" y="224" width="50" height="50" />
+      <bpmndi:BPMNShape id="Activity_1y0f4xe_di" bpmnElement="RejectPaymentScript" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1624" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1a7fcaq_di" bpmnElement="AcceptScript" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1400" y="173" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08tghpn_di" bpmnElement="PaymentSomethingWentWrong">
+        <dc:Bounds x="1082" y="452" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="568" y="281" width="65" height="40" />
+          <dc:Bounds x="1060" y="495" width="80" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_11ylc40_di" bpmnElement="Wait5Minutes">
-        <dc:Bounds x="962" y="512" width="36" height="36" />
+      <bpmndi:BPMNShape id="Gateway_0zjza5v_di" bpmnElement="WasMessagePositive" isMarkerVisible="true" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1045" y="572" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="944" y="488" width="72" height="14" />
+          <dc:Bounds x="1035" y="535" width="69" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_04j4uth_di" bpmnElement="UserDecision" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="874" y="557" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00zlabl_di" bpmnElement="RejectUserDecisionScript" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1624" y="557" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0p5cwm4_di" bpmnElement="StartWarehousesEvent" bioc:stroke="#205022" bioc:fill="#c8e6c9">
+        <dc:Bounds x="212" y="359" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="188" y="402" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18g2ax0_di" bpmnElement="CalculatePaymentSubProcess" isExpanded="true">
+        <dc:Bounds x="860" y="220" width="350" height="198" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0q3rqw3_di" bpmnElement="Event_0q3rqw3" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="882" y="292" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0r069e2" bpmnElement="Activity_0wizrck" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="940" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0wytsge_di" bpmnElement="IsFinalAmountCorrect" isMarkerVisible="true" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1055" y="285" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1041" y="256" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_073vyfu_di" bpmnElement="Event_073vyfu" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1142" y="292" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0kzyta1_di" bpmnElement="PaymentError" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1122" y="362" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1104" y="405" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ic6dc0_di" bpmnElement="Flow_1ic6dc0" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="918" y="310" />
+        <di:waypoint x="940" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_014n0si_di" bpmnElement="Flow_014n0si">
+        <di:waypoint x="1040" y="310" />
+        <di:waypoint x="1055" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h354ax_di" bpmnElement="Flow_1h354ax">
+        <di:waypoint x="1105" y="310" />
+        <di:waypoint x="1142" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1115" y="292" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jcr2ld_di" bpmnElement="Flow_1jcr2ld" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1080" y="335" />
+        <di:waypoint x="1080" y="380" />
+        <di:waypoint x="1122" y="380" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1088" y="355" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_00fx5rl_di" bpmnElement="Wait3Minutes" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="412" y="652" width="36" height="36" />
+        <dc:Bounds x="568" y="619" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="395" y="695" width="72" height="14" />
+          <dc:Bounds x="550" y="657" width="72" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0hcyp8j_di" bpmnElement="Flow_0hcyp8j" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="285" y="410" />
-        <di:waypoint x="325" y="410" />
+      <bpmndi:BPMNShape id="Event_1bq071u_di" bpmnElement="Event_13kbwhs" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="952" y="400" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1tfsgzd_di" bpmnElement="SequenceFlow_1tfsgzd" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="438" y="377" />
+        <di:waypoint x="481" y="377" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0tvi6dt_di" bpmnElement="NoProductType" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="350" y="435" />
-        <di:waypoint x="350" y="630" />
-        <di:waypoint x="400" y="630" />
+        <di:waypoint x="506" y="402" />
+        <di:waypoint x="506" y="597" />
+        <di:waypoint x="556" y="597" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="327" y="532" width="82" height="14" />
+          <dc:Bounds x="483" y="499" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1ht1b4k_di" bpmnElement="SpecialProductType" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="350" y="385" />
-        <di:waypoint x="350" y="249" />
-        <di:waypoint x="420" y="249" />
+        <di:waypoint x="506" y="352" />
+        <di:waypoint x="506" y="216" />
+        <di:waypoint x="576" y="216" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="319" y="253" width="78" height="27" />
+          <dc:Bounds x="475" y="220" width="78" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_10lqpos_di" bpmnElement="StandardProductType" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="375" y="410" />
-        <di:waypoint x="545" y="410" />
+        <di:waypoint x="531" y="377" />
+        <di:waypoint x="701" y="377" />
         <bpmndi:BPMNLabel color:color="#205022">
-          <dc:Bounds x="461" y="396" width="87" height="27" />
+          <dc:Bounds x="562" y="363" width="87" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0z2rbhz_di" bpmnElement="Flow_0z2rbhz" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="570" y="545" />
-        <di:waypoint x="570" y="435" />
+        <di:waypoint x="726" y="512" />
+        <di:waypoint x="726" y="402" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="537" y="488" width="45" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1kj6zxh_di" bpmnElement="Flow_1kj6zxh" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="540" y="570" />
-        <di:waypoint x="470" y="570" />
-        <di:waypoint x="470" y="289" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="484" y="554" width="37" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_01f9pc0_di" bpmnElement="Flow_01f9pc0">
-        <di:waypoint x="595" y="570" />
-        <di:waypoint x="742" y="570" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="654" y="554" width="33" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0ake4fe_di" bpmnElement="Flow_0ake4fe" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="430" y="688" />
-        <di:waypoint x="430" y="730" />
-        <di:waypoint x="760" y="730" />
-        <di:waypoint x="760" y="590" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="558" y="738" width="74" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1wyat84_di" bpmnElement="Flow_1wyat84" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="625" y="249" />
-        <di:waypoint x="760" y="249" />
-        <di:waypoint x="760" y="370" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="633" y="233" width="68" height="14" />
+          <dc:Bounds x="693" y="455" width="45" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0vrftgd_di" bpmnElement="Flow_0vrftgd" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="595" y="410" />
-        <di:waypoint x="710" y="410" />
+        <di:waypoint x="751" y="377" />
+        <di:waypoint x="860" y="377" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0hi2a4q_di" bpmnElement="Flow_0hi2a4q" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="500" y="630" />
-        <di:waypoint x="570" y="630" />
-        <di:waypoint x="570" y="595" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ym6oh6_di" bpmnElement="Flow_1ym6oh6">
-        <di:waypoint x="600" y="224" />
-        <di:waypoint x="600" y="140" />
-        <di:waypoint x="1112" y="140" />
+      <bpmndi:BPMNEdge id="Flow_1kj6zxh_di" bpmnElement="Flow_1kj6zxh" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="696" y="537" />
+        <di:waypoint x="626" y="537" />
+        <di:waypoint x="626" y="256" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="599" y="147" width="33" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0gnco5v_di" bpmnElement="Flow_0gnco5v">
-        <di:waypoint x="778" y="570" />
-        <di:waypoint x="910" y="570" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_03184tp_di" bpmnElement="Flow_03184tp">
-        <di:waypoint x="1010" y="570" />
-        <di:waypoint x="1055" y="570" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0sv55bq_di" bpmnElement="Flow_0sv55bq">
-        <di:waypoint x="980" y="512" />
-        <di:waypoint x="980" y="440" />
-        <di:waypoint x="1252" y="440" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0wp7ziu_di" bpmnElement="Flow_0wp7ziu">
-        <di:waypoint x="1105" y="570" />
-        <di:waypoint x="1270" y="570" />
-        <di:waypoint x="1270" y="458" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1180" y="552" width="15" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0ywgpft_di" bpmnElement="Flow_0ywgpft">
-        <di:waypoint x="1080" y="595" />
-        <di:waypoint x="1080" y="790" />
-        <di:waypoint x="310" y="790" />
-        <di:waypoint x="310" y="430" />
-        <di:waypoint x="336" y="421" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="686" y="772" width="18" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1t3p7x2_di" bpmnElement="Flow_1t3p7x2" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="810" y="410" />
-        <di:waypoint x="885" y="410" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0xnxon9_di" bpmnElement="Flow_0xnxon9">
-        <di:waypoint x="935" y="410" />
-        <di:waypoint x="1270" y="410" />
-        <di:waypoint x="1270" y="422" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1095" y="392" width="15" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_06n9wob_di" bpmnElement="Flow_06n9wob">
-        <di:waypoint x="910" y="385" />
-        <di:waypoint x="910" y="308" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="917" y="344" width="17" height="14" />
+          <dc:Bounds x="640" y="521" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1rw7bnt_di" bpmnElement="Flow_1rw7bnt" bioc:stroke="#205022" color:border-color="#205022">
-        <di:waypoint x="520" y="249" />
-        <di:waypoint x="575" y="249" />
+        <di:waypoint x="676" y="216" />
+        <di:waypoint x="731" y="216" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hi2a4q_di" bpmnElement="Flow_0hi2a4q" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="656" y="597" />
+        <di:waypoint x="726" y="597" />
+        <di:waypoint x="726" y="562" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01f9pc0_di" bpmnElement="Flow_01f9pc0" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="751" y="537" />
+        <di:waypoint x="924" y="537" />
+        <di:waypoint x="924" y="557" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="803" y="521" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wyat84_di" bpmnElement="Flow_1wyat84" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="781" y="216" />
+        <di:waypoint x="806" y="216" />
+        <di:waypoint x="806" y="280" />
+        <di:waypoint x="860" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="786" y="226" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ym6oh6_di" bpmnElement="Flow_1ym6oh6" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="756" y="191" />
+        <di:waypoint x="756" y="107" />
+        <di:waypoint x="790" y="107" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="735" y="114" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ywgpft_di" bpmnElement="Flow_0ywgpft" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1070" y="622" />
+        <di:waypoint x="1070" y="757" />
+        <di:waypoint x="388" y="757" />
+        <di:waypoint x="388" y="417" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="720" y="739" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07jg4ui_di" bpmnElement="Flow_07jg4ui" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="248" y="377" />
+        <di:waypoint x="338" y="377" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1artwcx_di" bpmnElement="Flow_1artwcx" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="890" y="107" />
+        <di:waypoint x="972" y="107" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vjr59j_di" bpmnElement="Flow_0vjr59j">
+        <di:waypoint x="1210" y="360" />
+        <di:waypoint x="1250" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1t3p7x2_di" bpmnElement="Flow_1t3p7x2" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1350" y="360" />
+        <di:waypoint x="1425" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1m4iktg_di" bpmnElement="Flow_1m4iktg" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1724" y="360" />
+        <di:waypoint x="1792" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fknxxm_di" bpmnElement="Flow_0fknxxm" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1724" y="597" />
+        <di:waypoint x="1810" y="597" />
+        <di:waypoint x="1810" y="378" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xnxon9_di" bpmnElement="Flow_0xnxon9" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1475" y="360" />
+        <di:waypoint x="1624" y="360" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1542" y="342" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06n9wob_di" bpmnElement="Flow_06n9wob" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1450" y="335" />
+        <di:waypoint x="1450" y="253" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1425" y="296" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09ej3c9_di" bpmnElement="Flow_09ej3c9" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1500" y="213" />
+        <di:waypoint x="1566" y="213" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16q6fel_di" bpmnElement="Flow_16q6fel" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="970" y="436" />
+        <di:waypoint x="970" y="470" />
+        <di:waypoint x="1082" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_09y3i3e_di" bpmnElement="SequenceFlow_09y3i3e" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="974" y="597" />
+        <di:waypoint x="1045" y="597" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wp7ziu_di" bpmnElement="Flow_0wp7ziu" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="1095" y="597" />
+        <di:waypoint x="1624" y="597" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1594" y="581" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ake4fe_di" bpmnElement="Flow_0ake4fe" bioc:stroke="#205022" color:border-color="#205022">
+        <di:waypoint x="586" y="655" />
+        <di:waypoint x="586" y="697" />
+        <di:waypoint x="924" y="697" />
+        <di:waypoint x="924" y="637" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="718" y="705" width="74" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
